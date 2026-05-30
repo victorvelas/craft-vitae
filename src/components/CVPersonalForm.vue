@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import type { PersonalInfo } from '../types/cv';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   personalInfo: PersonalInfo;
@@ -13,7 +16,7 @@ const handlePhotoChange = async (event: Event) => {
     try {
       await props.uploadPhoto(target.files[0]);
     } catch (err: any) {
-      alert(`Error uploading image: ${err.message || err}`);
+      alert(t('actions.photoError', { msg: err.message || err }));
     }
   }
 };
@@ -30,53 +33,55 @@ const handlePhotoChange = async (event: Event) => {
         </svg>
       </div>
       <div class="flex-1 space-y-2">
-        <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Profile Photo (Optional)</label>
+        <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+          {{ t('personal.photoLabel') }}
+        </label>
         <div class="flex gap-2">
           <label class="px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md cursor-pointer transition shadow-sm">
-            Upload Photo
+            {{ t('personal.uploadPhoto') }}
             <input type="file" accept="image/*" @change="handlePhotoChange" class="hidden" />
           </label>
-          <button 
+          <button
             v-if="personalInfo.photo"
             type="button"
-            @click="removePhoto" 
-            class="px-3 py-1.5 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-955/30 rounded-md border border-rose-200 dark:border-rose-900/50 transition cursor-pointer"
+            @click="removePhoto"
+            class="px-3 py-1.5 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md border border-rose-200 dark:border-rose-900/50 transition cursor-pointer"
           >
-            Remove
+            {{ t('personal.removePhoto') }}
           </button>
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
-      <div>
-        <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Sub Title</label>
-        <input 
-          type="text" 
-          v-model="personalInfo.subTitle" 
-          placeholder="Software Developer" 
-          class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
-          maxlength="150"
-        />
-      </div>
+    <!-- Sub Title -->
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.subTitle') }}</label>
+      <input
+        type="text"
+        v-model="personalInfo.subTitle"
+        :placeholder="t('personal.subTitlePlaceholder')"
+        maxlength="150"
+        class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
+      />
     </div>
+
     <!-- Name Inputs -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Names</label>
-        <input 
-          type="text" 
-          v-model="personalInfo.firstName" 
-          placeholder="John" 
+        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.firstName') }}</label>
+        <input
+          type="text"
+          v-model="personalInfo.firstName"
+          :placeholder="t('personal.firstNamePlaceholder')"
           class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
         />
       </div>
       <div>
-        <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Last Names</label>
-        <input 
-          type="text" 
-          v-model="personalInfo.lastName" 
-          placeholder="Doe" 
+        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.lastName') }}</label>
+        <input
+          type="text"
+          v-model="personalInfo.lastName"
+          :placeholder="t('personal.lastNamePlaceholder')"
           class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
         />
       </div>
@@ -85,20 +90,20 @@ const handlePhotoChange = async (event: Event) => {
     <!-- Contact details -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Email</label>
-        <input 
-          type="email" 
-          v-model="personalInfo.email" 
-          placeholder="john.doe@example.com" 
+        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.email') }}</label>
+        <input
+          type="email"
+          v-model="personalInfo.email"
+          :placeholder="t('personal.emailPlaceholder')"
           class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
         />
       </div>
       <div>
-        <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Phone</label>
-        <input 
-          type="text" 
-          v-model="personalInfo.phone" 
-          placeholder="+1 (555) 123-4567" 
+        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.phone') }}</label>
+        <input
+          type="text"
+          v-model="personalInfo.phone"
+          :placeholder="t('personal.phonePlaceholder')"
           class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
         />
       </div>
@@ -106,20 +111,20 @@ const handlePhotoChange = async (event: Event) => {
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Website / Portfolio URL</label>
-        <input 
-          type="text" 
-          v-model="personalInfo.website" 
-          placeholder="https://johndoe.dev" 
+        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.website') }}</label>
+        <input
+          type="text"
+          v-model="personalInfo.website"
+          :placeholder="t('personal.websitePlaceholder')"
           class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
         />
       </div>
       <div>
-        <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Address / Location</label>
-        <input 
-          type="text" 
-          v-model="personalInfo.address" 
-          placeholder="New York, NY" 
+        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.address') }}</label>
+        <input
+          type="text"
+          v-model="personalInfo.address"
+          :placeholder="t('personal.addressPlaceholder')"
           class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
         />
       </div>
@@ -127,20 +132,20 @@ const handlePhotoChange = async (event: Event) => {
 
     <!-- Profiles -->
     <div>
-      <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Professional Profile</label>
-      <textarea 
-        v-model="personalInfo.profile" 
+      <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.profile') }}</label>
+      <textarea
+        v-model="personalInfo.profile"
         rows="3"
-        placeholder="Detail your profession, career level, and key value proposition..." 
+        :placeholder="t('personal.profilePlaceholder')"
         class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition resize-y"
       ></textarea>
     </div>
     <div>
-      <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">About Me</label>
-      <textarea 
-        v-model="personalInfo.aboutMe" 
+      <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{{ t('personal.aboutMe') }}</label>
+      <textarea
+        v-model="personalInfo.aboutMe"
         rows="3"
-        placeholder="Talk about your passions, working style, and extra-professional goals..." 
+        :placeholder="t('personal.aboutMePlaceholder')"
         class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition resize-y"
       ></textarea>
     </div>

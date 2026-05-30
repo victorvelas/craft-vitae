@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import type { CVData } from '../types/cv';
+import { computed } from 'vue/dist/vue.js';
+
+const { t } = useI18n();
 
 defineProps<{
   cvData: CVData;
 }>();
 
-// Helper to format date string YYYY-MM to MMM YYYY (e.g. "2023-03" -> "Mar 2023")
 const formatDate = (dateStr: string | undefined): string => {
   if (!dateStr) return '';
   try {
@@ -20,6 +23,12 @@ const formatDate = (dateStr: string | undefined): string => {
   }
 };
 
+const showTextareaContent = (text:string): string[] => {
+  if (!text) return [];
+  const lines:string[] = text.split('\n').filter(l => l.trim() !== '');
+  return lines
+}
+
 const handlePrint = () => {
   window.print();
 };
@@ -30,7 +39,7 @@ const handlePrint = () => {
     <!-- Top toolbar, hidden on print -->
     <div class="w-full max-w-[21cm] mb-4 flex justify-between items-center print:hidden">
       <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
-        Live CV Preview (Auto-scales to A4)
+        {{ t('preview.toolbar') }}
       </span>
       <button 
         @click="handlePrint"
@@ -39,13 +48,13 @@ const handlePrint = () => {
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
-        Print or Save PDF
+        {{ t('preview.printButton') }}
       </button>
     </div>
 
     <!-- The Paper (A4 size: 21cm x 29.7cm) -->
     <div 
-      class="w-full max-w-[21cm] min-h-[29.7cm] bg-white text-slate-900 shadow-xl rounded-lg p-[1.2cm] flex flex-col font-sans box-border transition-all duration-300 print:shadow-none print:rounded-none print:p-0 print:w-full print:min-h-0"
+      class="w-full max-w-[21cm] min-h-[29.7cm] bg-white text-slate-900 shadow-xl rounded-lg p-[1cm] flex flex-col font-sans box-border transition-all duration-300 print:shadow-none print:rounded-none print:p-0 print:w-full print:min-h-0"
       id="cv-printable-area"
     >
       <!-- Header Section -->
@@ -108,7 +117,7 @@ const handlePrint = () => {
 
           <!-- About Me Section -->
           <div v-if="cvData.personalInfo.aboutMe" class="mb-6">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2.5">About Me</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2.5">{{ t('preview.aboutMe') }}</h3>
             <p class="text-[11.5px] leading-relaxed text-slate-700 font-normal text-justify whitespace-pre-line">
               {{ cvData.personalInfo.aboutMe }}
             </p>
@@ -116,11 +125,11 @@ const handlePrint = () => {
 
           <!-- Skills Section -->
           <div class="mb-6" v-if="cvData.skills.hard.length > 0 || cvData.skills.soft.length > 0">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2.5">Skills</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2.5">{{ t('preview.skills') }}</h3>
             
             <!-- Technical / Hard Skills -->
             <div v-if="cvData.skills.hard.length > 0" class="mb-4">
-              <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Technical</h4>
+              <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">{{ t('preview.technical') }}</h4>
               <div class="flex flex-wrap gap-1">
                 <span 
                   v-for="(skill, i) in cvData.skills.hard" 
@@ -134,7 +143,7 @@ const handlePrint = () => {
 
             <!-- Interpersonal / Soft Skills -->
             <div v-if="cvData.skills.soft.length > 0">
-              <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Soft Skills</h4>
+              <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">{{ t('preview.softSkills') }}</h4>
               <ul class="list-disc pl-4 text-[11px] text-slate-750 space-y-0.5 leading-tight">
                 <li v-for="(skill, i) in cvData.skills.soft" :key="'pr-soft-'+i">
                   {{ skill }}
@@ -145,7 +154,7 @@ const handlePrint = () => {
 
           <!-- Languages Section -->
           <div v-if="cvData.languages.length > 0" class="mb-6">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2.5">Languages</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2.5">{{ t('preview.languages') }}</h3>
             <div class="space-y-1.5">
               <div 
                 v-for="lang in cvData.languages" 
@@ -157,7 +166,7 @@ const handlePrint = () => {
                   class="text-[9px] px-1.5 py-0.5 font-bold uppercase tracking-wide rounded"
                   :class="lang.level === 'native' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'"
                 >
-                  {{ lang.level }}
+                  {{ lang.level === 'native' ? t(`preview.native`) : lang.level }}
                 </span>
               </div>
             </div>
@@ -169,24 +178,27 @@ const handlePrint = () => {
         <div class="md:col-span-2 space-y-6 print:col-span-2">
           
           <!-- Professional Profile Text -->
-          <div v-if="cvData.personalInfo.profile" class="pb-4 border-b border-slate-100">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2.5">Professional Profile</h3>
+          <div v-if="cvData.personalInfo.profile" class="pb-1 mb-2 border-b border-slate-100">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">{{ t('preview.professionalProfile') }}</h3>
             <p class="text-[12px] leading-relaxed text-slate-700 text-justify font-normal whitespace-pre-line">
               {{ cvData.personalInfo.profile }}
             </p>
           </div>
 
           <!-- Professional Experience Section -->
-          <div v-if="cvData.experiences.length > 0">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-3.5 flex items-center">
-              Professional Experience
+          <div v-if="cvData.experiences.length > 0" class="mb-0">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2 flex items-center">
+              {{ t('preview.experience') }}
             </h3>
             
             <div class="space-y-4">
               <div 
-                v-for="exp in cvData.experiences" 
+                v-for="(exp, expIndex) in cvData.experiences" 
                 :key="'pr-exp-'+exp.id"
-                class="relative border-l border-slate-200 pl-4 pb-2"
+                :class="{
+                  'relative border-l border-slate-200 pl-4 pb-1 mb-2': expIndex !== cvData.experiences.length,
+                  'relative border-l border-slate-200 pl-4 pb-1 mb-0': expIndex === cvData.experiences.length
+                }"
               >
                 <!-- Timeline bullet -->
                 <div class="absolute w-2 h-2 bg-indigo-600 rounded-full -left-[4.5px] top-[5px]"></div>
@@ -198,13 +210,19 @@ const handlePrint = () => {
                     <span class="text-indigo-600 font-semibold">{{ exp.company || 'Company' }}</span>
                   </h4>
                   <span class="text-[10px] font-bold text-slate-500 whitespace-nowrap">
-                    {{ formatDate(exp.startDate) }} - {{ exp.current ? 'Actuality' : formatDate(exp.endDate) }}
+                    {{ formatDate(exp.startDate) }} - {{ exp.current ? t('preview.actuality') : formatDate(exp.endDate) }}
                   </span>
                 </div>
                 
-                <div class="text-[10px] font-semibold text-slate-400 mb-1.5">
+                <div class="text-[10px] font-semibold text-slate-400 mb-0">
                   {{ exp.address }}
                 </div>
+                <template v-if="exp.responsabilities">
+                  <span class="text-[11px] text-slate-600 font-medium mt-0.5">{{ t('preview.responsabilities')}}</span>
+                  <ul class="list-disc pl-4 text-[11px] font-semibold text-slate-500 space-y-0.5 leading-tight">
+                    <li v-for="(res, resIndex) in showTextareaContent(exp.responsabilities)" :key="resIndex" class="mb-1 leading-[1.10rem]">{{ res }}</li>  
+                  </ul>
+                </template>
               </div>
             </div>
           </div>
@@ -214,7 +232,7 @@ const handlePrint = () => {
             
             <!-- Formal Education -->
             <div v-if="cvData.educationList.length > 0">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-3.5">Education</h3>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">{{ t('preview.education') }}</h3>
               <div class="space-y-3.5">
                 <div 
                   v-for="edu in cvData.educationList" 
@@ -241,7 +259,7 @@ const handlePrint = () => {
 
             <!-- Courses & Certifications -->
             <div v-if="cvData.courses.length > 0" class="pt-2">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-3">Courses & Certifications</h3>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-3">{{ t('preview.courses') }}</h3>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 print:grid-cols-2">
                 <div 
                   v-for="course in cvData.courses" 
@@ -250,15 +268,15 @@ const handlePrint = () => {
                 >
                   <div>
                     <h4 class="text-[10.5px] font-bold text-slate-800 leading-tight">
-                      {{ course.title || 'Course Title' }}
+                      {{ course.title || t('preview.courseNamePlaceholder') }}
                     </h4>
                     <p class="text-[9.5px] text-slate-500 font-semibold mt-0.5">
-                      {{ course.provider || 'Provider' }}
+                      {{ course.provider || t('preview.courseProviderPlaceholder') }}
                     </p>
                   </div>
                   <div class="flex justify-between items-center mt-2 pt-1 border-t border-slate-100 text-[9px] font-bold text-slate-400">
-                    <span>Ended: {{ formatDate(course.dateEnd) }}</span>
-                    <span class="capitalize px-1 bg-slate-200/50 rounded text-slate-600">{{ course.modality }}</span>
+                    <span>{{ t('preview.ended') }} {{ formatDate(course.dateEnd) }}</span>
+                    <span class="capitalize px-1 bg-slate-200/50 rounded text-slate-600">{{ t(`preview.${course.modality}Modality`) }}</span>
                   </div>
                 </div>
               </div>
