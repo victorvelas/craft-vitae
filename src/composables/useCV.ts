@@ -36,7 +36,8 @@ const initialDummyData = (): CVData => {
         address: 'San Francisco, CA (Remote)',
         startDate: '2023-03',
         endDate: '',
-        current: true
+        current: true,
+        responsabilities: '',
       },
       {
         id: generateId(),
@@ -45,7 +46,8 @@ const initialDummyData = (): CVData => {
         address: 'Austin, TX',
         startDate: '2020-08',
         endDate: '2023-02',
-        current: false
+        current: false,
+        responsabilities: '',
       }
     ],
     educationList: [
@@ -144,7 +146,8 @@ export function useCV() {
       address: '',
       startDate: '',
       endDate: '',
-      current: false
+      current: false,
+      responsabilities: '',
     });
   };
 

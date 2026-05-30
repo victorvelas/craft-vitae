@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import type { CVData } from '../types/cv';
-import { computed } from 'vue/dist/vue.js';
 
 const { t } = useI18n();
 
@@ -201,7 +200,7 @@ const handlePrint = () => {
                 }"
               >
                 <!-- Timeline bullet -->
-                <div class="absolute w-2 h-2 bg-indigo-600 rounded-full -left-[4.5px] top-[5px]"></div>
+                <div class="absolute w-2 h-2 bg-indigo-600 rounded-full left-[-4px] top-[5px]"></div>
                 
                 <div class="flex justify-between items-start flex-wrap gap-1 mb-0.5">
                   <h4 class="text-[12px] font-bold text-slate-900 leading-tight">
