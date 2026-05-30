@@ -19,6 +19,7 @@ export interface Experience {
   startDate: string; // YYYY-MM
   endDate: string; // YYYY-MM
   current: boolean; // Is current position
+  responsabilities: string
 }
 
 export interface Course {
