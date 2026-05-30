@@ -14,5 +14,4 @@ Create your Curriculum Vitae with this new Web Application.
 - TypeScript
 - Vite
 - Tailwind CSS
-- PDFMake
 - Love ❤️
