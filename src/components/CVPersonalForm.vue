@@ -48,6 +48,18 @@ const handlePhotoChange = async (event: Event) => {
       </div>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-650 dark:text-slate-400 mb-1">Sub Title</label>
+        <input 
+          type="text" 
+          v-model="personalInfo.subTitle" 
+          placeholder="Software Developer" 
+          class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition"
+          maxlength="150"
+        />
+      </div>
+    </div>
     <!-- Name Inputs -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>

@@ -57,7 +57,7 @@ const handlePrint = () => {
           </h2>
           <!-- Subtitle / Main Role -->
           <p class="text-sm font-semibold tracking-wider text-slate-500 uppercase mt-2">
-            {{ cvData.experiences[0]?.position || 'Professional Resume' }}
+            {{ cvData.personalInfo.subTitle || 'Professional Resume' }}
           </p>
         </div>
 
@@ -194,7 +194,7 @@ const handlePrint = () => {
                 <div class="flex justify-between items-start flex-wrap gap-1 mb-0.5">
                   <h4 class="text-[12px] font-bold text-slate-900 leading-tight">
                     {{ exp.position || 'Position' }} 
-                    <span class="text-slate-400 font-normal">at</span> 
+                    <span class="text-slate-400 font-normal"> at </span> 
                     <span class="text-indigo-600 font-semibold">{{ exp.company || 'Company' }}</span>
                   </h4>
                   <span class="text-[10px] font-bold text-slate-500 whitespace-nowrap">
